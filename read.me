@@ -145,3 +145,67 @@ Decryption:  converting secret data/ unreadable data into readable
 "asfdsf3543rx!@!@$sfdsf"
 
 12345
+
+----------------------------------------------
+
+MERN
+
+Express.js:
+-----------
+
+express.js
+http
+
+
+1. what is express.js?
+2. Install Express
+
+npm i express
+
+3. create express server
+4. request and response
+5. Http Methods
+
+    CRUD operations
+    create Read Update DELETE
+
+GET  ---> Get/fetch/read  data
+POST ----> create/post data
+PUT -----> Update Complete data
+PATCH ----> update partial data
+DELETE ---> delete data
+
+
+6. Route Parameters
+
+params :  req.params  
+ex: /users/10
+/users/name
+
+query : req.query
+ex: /users?name=Harsha&age=23&role=admin&location=hindupur
+
+body: req.body
+
+
+{
+    id:1,
+    name:"koushik",
+    age:22
+}
+
+{
+    id:2,
+    name:"Deepika",
+    age:22
+}
+
+7. express.json()
+
+to read req.body information
+
+app.use(express.json())
+
+8. Middleware
+
+request --> middleware -->next()--> app.use()--> route-->response
