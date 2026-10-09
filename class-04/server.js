@@ -37,8 +37,6 @@ app.get("/users", (req, res) => {
     res.send(req.query)
 })
 
-
-
 app.post("/users", (req, res) => {
 
     console.log("req.body---", req.body)
