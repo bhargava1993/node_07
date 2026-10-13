@@ -1,0 +1,292 @@
+DATABASE:
+---------
+
+Data + base
+
+data:
+-----
+
+books 
+-----------------------
+excel
+
+students
+teachers
+libraby
+-----------------------
+database:
+
+Tables:
+
+students
+teachers
+libraby
+
+------------------------
+
+sql and Nosql
+-------------
+
+sql --> strucutre query langure
+
+table --> design table strucutre
+
+student table:
+-------------
+Name = string --> varchar(15)
+class
+age
+rolleNumber = 1
+
+email
+
+sql query:
+----------
+CREATE DATABASE CollegeDB;
+
+USE CollegeDB;
+
+CREATE TABLE Students( 
+    rolleNumber INT, 
+    Name VARCHAR(15),
+    class VARCHAR(15),
+    age INT);
+
+kondreddy bhargava reddy
+
+ALTER TABLE Students Name VARCHAR(50);
+
+ALTER TABLE Students ADD email VARCHAR(50), ADD city VARCHAR(30);
+
+ALTER TABLE Students Fees decimal(50);
+
+ALTER TABLE Students Details VARCHAR(500);
+
+INSERT INTO Students (Name,rolleNumber,class,age,email,city) 
+VALUES(  'bhargava', 1, 'mca','30','1993bhargava@gmail.com','hindupur')
+
+noSql:
+-----
+No strucutre
+
+use CollegeDB;
+
+crete table:
+------------
+CollegeDB.createCollection("students);
+
+insertOne:
+----------
+{
+    name:"bhargava",
+    age:30,
+    rolleNumber: 1,
+    class:"mca"
+}
+
+CollegeDB.students.insertOne(
+    {
+    name:"bhargava",
+    age:30,
+    rolleNumber: 1,
+    class:"mca"
+   }
+)
+
+
+CollegeDB.students.insertOne(
+    {
+    name:"bhargava",
+    age:30,
+    rolleNumber: 1,
+    class:"mca",
+    email:"1993bhargava@gmail.com",
+    fees: 10000
+   }
+)
+
+insertMany:
+
+CollegeDB.students.insertMany(
+    [
+        {},{},{}
+    ]
+)
+
+-----------------------------------------------------
+
+
+mongodb:
+--------
+mongosh --version
+
+
+{
+  name: 'Harsha',
+  role: 'software',
+  age: 23,
+  salary: 100000,
+  location: 'bangalre',
+  status: true
+}
+
+-------------------------------------------------------
+
+sql             mongodb
+-------------------------
+database        database
+Tables          Collection
+Raw             Document
+Column          Field
+Primary key     _id
+
+---------------------------------
+
+All fileds   --> 
+multiple Document --> collection
+
+16mb maximum size
+
+bsonObjectToolarge
+
+it will not save or updated
+
+-------------------------------
+{
+  name: 'Harsha',
+  role: 'software',
+  age: 23,
+  salary: 100000,
+  location: 'bangalre',
+  status: true
+}
+
+----------------------------------------
+
+show dbs
+
+use db
+
+db
+
+db.dropDatabase()
+
+db.createCollection(tableName)
+
+---------------------------------------
+
+
+single
+multiple
+
+create:
+-------
+insterOne
+insertMany
+
+Read:
+-----
+findOne
+find
+
+projection
+limit
+skip
+sort
+distinct
+
+<= : $lte
+< = : $lt
+>= : $gte
+> :  $gt
+== :$eq
+
+age: {$lte:23}
+
+find({age: {$lte:23}})
+
+update:
+----------
+updateOne
+updateMany
+
+delete:
+--------
+deleteOne
+deleteMany
+
+delete tabe:
+------------
+Drop table
+
+-------------------------------------
+
+{
+    name:"bhargava",
+    department:"IT",
+    salary:50000,
+    age:31
+}
+
+db.employees.insertOne({
+    name:"venu",
+    department:"Accounts",
+    salary:35000,
+    age:31
+},)
+
+
+
+db.employees.insertMany([
+    {
+    name:"sudheer",
+    department:"IT",
+    salary:40000,
+    age:24
+},
+{
+    name:"koushik",
+    department:"db admin",
+    salary:25000,
+    age:21
+},
+{
+    name:"deepika",
+    department:"Accounts",
+    salary:35000,
+    age:31
+},
+{
+    name:"koushik",
+    department:"Devpos",
+    salary:50000,
+    age:22
+},
+{
+    name:"gangireddy",
+    department:"Devpos",
+    salary:40000,
+    age:22
+},
+{
+    name:"soumya",
+    department:"fullstack Deveoper",
+    salary:60000,
+    age:23
+}
+
+])
+
+----------------------------------------------
+
+npm i mongodb
+
+1.MongoClient
+
+2. mongodb server
+
+3. connect databse (sample)
+
+4. collection (users)
+
+5. Document (json)
