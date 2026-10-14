@@ -290,3 +290,43 @@ npm i mongodb
 4. collection (users)
 
 5. Document (json)
+-----------------------------------------
+
+.env  --> environment file
+
+dotenv   --> module
+
+
+note:
+------
+security
+different environments
+Flexibility
+
+---------------------------------
+
+AWS secrutes
+
+sprint: 15days , 30 days
+
+development  --> developers are using
+
+staging  --> testers
+
+preprod --> 
+
+prod --> 
+
+------------------------------------------
+
+
+CORS:   (Cross-Origin Resource Sharing)
+-----
+
+Cros is a browser security mechanism that controls 
+whether a frotend application can access resources from a 
+different Origin (domain, port, or protocol)
+
+preflight request:
+-----------------
+
