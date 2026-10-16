@@ -1,0 +1,165 @@
+
+create database:
+----------------
+
+use ecommerce
+
+step:1
+---------
+db.customers.insertMany([
+  {
+    _id: ObjectId("650000000000000000000001"),
+    name: "Ravi",
+    email: "ravi@gmail.com",
+    city: "Hyderabad"
+  },
+  {
+    _id: ObjectId("650000000000000000000002"),
+    name: "Sita",
+    email: "sita@gmail.com",
+    city: "Bangalore"
+  },
+  {
+    _id: ObjectId("650000000000000000000003"),
+    name: "Kiran",
+    email: "kiran@gmail.com",
+    city: "Hyderabad"
+  }
+]);
+
+db.products.insertMany([
+  {
+    _id: ObjectId("660000000000000000000001"),
+    name: "Laptop",
+    category: "Electronics",
+    price: 60000,
+    stock: 10
+  },
+  {
+    _id: ObjectId("660000000000000000000002"),
+    name: "Mouse",
+    category: "Electronics",
+    price: 800,
+    stock: 50
+  },
+  {
+    _id: ObjectId("660000000000000000000003"),
+    name: "Keyboard",
+    category: "Electronics",
+    price: 1500,
+    stock: 25
+  },
+  {
+    _id: ObjectId("660000000000000000000004"),
+    name: "Office Chair",
+    category: "Furniture",
+    price: 5000,
+    stock: 8
+  }
+]);
+
+new date()
+
+db.orders.insertMany([
+  {
+    _id: ObjectId("670000000000000000000001"),
+    customerId: ObjectId("650000000000000000000001"),
+    orderDate: ISODate("2026-10-01T10:00:00Z"),
+    status: "Delivered",
+    items: [
+      {
+        productId: ObjectId("660000000000000000000001"),
+        quantity: 1,
+        unitPrice: 60000
+      },
+      {
+        productId: ObjectId("660000000000000000000002"),
+        quantity: 2,
+        unitPrice: 800
+      }
+    ],
+    totalAmount: 61600
+  },
+  {
+    _id: ObjectId("670000000000000000000002"),
+    customerId: ObjectId("650000000000000000000002"),
+    orderDate: ISODate("2026-10-02T11:00:00Z"),
+    status: "Pending",
+    items: [
+      {
+        productId: ObjectId("660000000000000000000003"),
+        quantity: 2,
+        unitPrice: 1500
+      }
+    ],
+    totalAmount: 3000
+  },
+  {
+    _id: ObjectId("670000000000000000000003"),
+    customerId: ObjectId("650000000000000000000001"),
+    orderDate: ISODate("2026-10-05T09:30:00Z"),
+    status: "Delivered",
+    items: [
+      {
+        productId: ObjectId("660000000000000000000004"),
+        quantity: 1,
+        unitPrice: 5000
+      }
+    ],
+    totalAmount: 5000
+  },
+  {
+    _id: ObjectId("670000000000000000000004"),
+    customerId: ObjectId("650000000000000000000003"),
+    orderDate: ISODate("2026-10-08T14:00:00Z"),
+    status: "Cancelled",
+    items: [
+      {
+        productId: ObjectId("660000000000000000000002"),
+        quantity: 1,
+        unitPrice: 800
+      }
+    ],
+    totalAmount: 800
+  }
+]);
+
+db.payments.insertMany([
+  {
+    _id: ObjectId("680000000000000000000001"),
+    orderId: ObjectId("670000000000000000000001"),
+    method: "UPI",
+    amount: 61600,
+    paymentStatus: "Paid"
+  },
+  {
+    _id: ObjectId("680000000000000000000002"),
+    orderId: ObjectId("670000000000000000000002"),
+    method: "Card",
+    amount: 3000,
+    paymentStatus: "Pending"
+  },
+  {
+    _id: ObjectId("680000000000000000000003"),
+    orderId: ObjectId("670000000000000000000003"),
+    method: "UPI",
+    amount: 5000,
+    paymentStatus: "Paid"
+  },
+  {
+    _id: ObjectId("680000000000000000000004"),
+    orderId: ObjectId("670000000000000000000004"),
+    method: "Cash",
+    amount: 800,
+    paymentStatus: "Refunded"
+  }
+]);
+
+
+
+step:2
+------
+db.customers.find()
+db.products.find()
+db.orders.find()
+db.payments.find()
