@@ -330,3 +330,159 @@ different Origin (domain, port, or protocol)
 preflight request:
 -----------------
 
+
+Aggregation:
+------------
+
+1. over fectching  (without project)
+2. under fectching (skiping required information)
+3. exact fectching  ($project)
+
+
+db.orders.find({_id:ObjectId("23432nbhj3j5)})
+
+$match
+$project
+$lookup
+$unwind
+
+$groupBy
+$in
+$eleMatch
+
+
+db.orders.aggregate([
+    {},
+    {},
+    {},
+    {}
+])
+
+db.orders.aggregate([
+    { $match :{  _id: ObjectId('670000000000000000000004')}},
+    {$project:{_id:0,customerId:1}}
+])
+
+db.orders.aggregate([
+    {$project:{_id:0,customerId:1}}
+])
+
+
+1. Get orders with customers details
+
+orders
+customers
+
+$lookup: to join two tables
+-----------
+db.orders.aggregate([
+    {
+        $lookup:{
+            from:"customers",
+            localField:"customerId",
+            foreignField:"_id",
+            as:"customerDetails"
+        }
+    },
+])
+
+
+db.orders.aggregate([
+    {$project:{_id:0,customerId:1}},
+    {
+        $lookup:{
+            from:"customers",
+            localField:"customerId",
+            foreignField:"_id",
+            as:"customerDetails"
+        }
+    },
+])
+
+2. get orders with payment details
+
+payments:
+
+{
+  _id: ObjectId('680000000000000000000002'),
+  orderId: ObjectId('670000000000000000000002'),
+  method: 'Card',
+  amount: 3000,
+  paymentStatus: 'Pending'
+}
+orders:
+{
+  _id: ObjectId('670000000000000000000002'),
+  customerId: ObjectId('650000000000000000000002'),
+  orderDate: ISODate('2026-10-02T11:00:00.000Z'),
+  status: 'Pending',
+  items: [
+    {
+      productId: ObjectId('660000000000000000000003'),
+      quantity: 2,
+      unitPrice: 1500
+    }
+  ],
+  totalAmount: 3000
+}
+
+
+
+db.orders.aggregate([
+    {
+        $lookup:{
+            from:"payments",
+            localField:"_id",
+            foreignField:"orderId",
+            as:"paymentDetails"
+        }
+    },
+])
+
+
+3. get orders with product details
+
+orders:
+{
+  _id: ObjectId('670000000000000000000002'),
+  customerId: ObjectId('650000000000000000000002'),
+  orderDate: ISODate('2026-10-02T11:00:00.000Z'),
+  status: 'Pending',
+  items: [
+    {
+      productId: ObjectId('660000000000000000000003'),
+      quantity: 2,
+      unitPrice: 1500
+    }
+  ],
+  totalAmount: 3000
+}
+
+products:
+{
+  "_id":  ObjectId("660000000000000000000003"),
+  "name": "Keyboard",
+  "category": "Electronics",
+  "price": 1500,
+  "stock": 25
+}
+
+db.orders.aggregate([
+
+    {$unwind:"$items"},
+
+    {
+        $lookup:{
+            from:"products",
+            localField:"items.productId",
+            foreignField:"_id",
+            as:"productDetails"
+        }
+    },
+])
+
+
+db.orders.aggregate([
+
+    {$unwind:"$items"}
+])

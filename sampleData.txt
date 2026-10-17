@@ -8,21 +8,21 @@ step:1
 ---------
 db.customers.insertMany([
   {
-    _id: ObjectId("650000000000000000000001"),
-    name: "Ravi",
-    email: "ravi@gmail.com",
+    _id: ObjectId("650000000000000000000004"),
+    name: "Harsha",
+    email: "harsha@gmail.com",
     city: "Hyderabad"
   },
   {
-    _id: ObjectId("650000000000000000000002"),
-    name: "Sita",
-    email: "sita@gmail.com",
+    _id: ObjectId("650000000000000000000005"),
+    name: "Deepika",
+    email: "deepika@gmail.com",
     city: "Bangalore"
   },
   {
-    _id: ObjectId("650000000000000000000003"),
-    name: "Kiran",
-    email: "kiran@gmail.com",
+    _id: ObjectId("650000000000000000000006"),
+    name: "Sudheer",
+    email: "sudheer@gmail.com",
     city: "Hyderabad"
   }
 ]);
@@ -163,3 +163,5 @@ db.customers.find()
 db.products.find()
 db.orders.find()
 db.payments.find()
+
+-------------------------------------------
