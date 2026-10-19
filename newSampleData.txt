@@ -1,0 +1,410 @@
+Aggregation:
+------------
+1. $match, $project
+
+Filtering and selecting fields
+
+2.$group, $sum, $avg
+
+Grouping and calculations
+
+3.$sort, $limit, $skip
+
+1-10, 11-20, 21-30
+
+Sorting and pagination
+
+4.$lookup, $unwind
+
+Working with multiple collections
+
+5.$push, $addToSet, $count
+
+Arrays and counting
+
+6.$set, $addFields, $facet
+
+Derived fields and reports
+
+-----------------------------------------
+
+db.orders.insertMany([
+  {
+    orderId: 101,
+    customer: "Ravi",
+    city: "Hyderabad",
+    product: "Laptop",
+    category: "Electronics",
+    amount: 50000,
+    quantity: 1,
+    status: "Delivered"
+  },
+  {
+    orderId: 102,
+    customer: "Ravi",
+    city: "Hyderabad",
+    product: "Mouse",
+    category: "Accessories",
+    amount: 1000,
+    quantity: 2,
+    status: "Pending"
+  },
+  {
+    orderId: 103,
+    customer: "Priya",
+    city: "Bangalore",
+    product: "Mobile",
+    category: "Electronics",
+    amount: 20000,
+    quantity: 1,
+    status: "Delivered"
+  },
+  {
+    orderId: 104,
+    customer: "Ravi",
+    city: "Hyderabad",
+    product: "Keyboard",
+    category: "Accessories",
+    amount: 2000,
+    quantity: 1,
+    status: "Delivered"
+  },
+  {
+    orderId: 105,
+    customer: "Priya",
+    city: "Bangalore",
+    product: "Laptop",
+    category: "Electronics",
+    amount: 50000,
+    quantity: 1,
+    status: "Pending"
+  },
+  {
+    orderId: 106,
+    customer: "Arun",
+    city: "Chennai",
+    product: "Mouse",
+    category: "Accessories",
+    amount: 1000,
+    quantity: 3,
+    status: "Delivered"
+  },
+  {
+    orderId: 107,
+    customer: "Arun",
+    city: "Chennai",
+    product: "Mobile",
+    category: "Electronics",
+    amount: 20000,
+    quantity: 2,
+    status: "Delivered"
+  },
+  {
+    orderId: 108,
+    customer: "Priya",
+    city: "Bangalore",
+    product: "Keyboard",
+    category: "Accessories",
+    amount: 2000,
+    quantity: 2,
+    status: "Cancelled"
+  }
+])
+
+------------------------
+
+db.customers.insertMany([
+  {
+    customerId: 1,
+    name: "Ravi",
+    city: "Hyderabad",
+    age: 28,
+    membership: "Gold",
+    email: "ravi@gmail.com"
+  },
+  {
+    customerId: 2,
+    name: "Priya",
+    city: "Bangalore",
+    age: 25,
+    membership: "Silver",
+    email: "priya@gmail.com"
+  },
+  {
+    customerId: 3,
+    name: "Arun",
+    city: "Chennai",
+    age: 32,
+    membership: "Gold",
+    email: "arun@gmail.com"
+  },
+  {
+    customerId: 4,
+    name: "Sneha",
+    city: "Hyderabad",
+    age: 24,
+    membership: "Platinum",
+    email: "sneha@gmail.com"
+  },
+  {
+    customerId: 5,
+    name: "Kiran",
+    city: "Vijayawada",
+    age: 30,
+    membership: "Silver",
+    email: "kiran@gmail.com"
+  },
+  {
+    customerId: 6,
+    name: "Divya",
+    city: "Bangalore",
+    age: 27,
+    membership: "Gold",
+    email: "divya@gmail.com"
+  }
+])
+
+-------------------------------------
+
+1. $match, $project
+
+Filtering and selecting fields
+
+direct quirey:
+-------------------
+db.customers.find({},{_id:0,name:1})
+
+db.orders.find({city: "Hyderabad"})
+
+db.orders.find({customer: "Arun"})
+
+db.orders.find({product: "Keyboard"})
+
+db.orders.find({product: "Keyboard"},{_id:0,city:1})
+
+--------------------------------------------------
+
+1. find all Delivered orders
+
+
+db.orders.distinct("status")
+
+o/p:
+[ 'Cancelled', 'Delivered', 'Pending' ]
+
+db.orders.find({"status":"Delivered"})
+
+
+db.orders.aggregate([
+    {$match:{"status":"Delivered"}}
+])
+
+db.orders.aggregate([
+    {$match:{"status":"Cancelled"}}
+])
+
+db.orders.aggregate([
+    {$match:{"status":"Pending"}}
+])
+
+----------------------------------------------
+0,1
+
+3. Display only customer, product and amount
+
+db.orders.aggregate([
+    {$project:{
+        _id:0,
+        customer:1,
+        product:1,
+        amount:1
+    }}
+])
+
+
+db.orders.aggregate([
+    { $match: {
+        city:"Bangalore",
+        status:"Delivered"
+    }},
+    { 
+        $project:{
+             _id:0,
+            customer:1,
+            product:1,
+            amount:1,
+            city:1
+        }
+    }
+])
+--------------------------------------
+
+2.$group, $sum, $avg,  $max, $min
+
+1. calculate total order amount
+
+db.orders.aggregate([
+
+    { $group: {
+        _id:null,
+        totalAmount: {
+            $sum: "$amount"
+        }
+    }}
+
+])
+
+2. calculate total amount for each customer
+
+db.orders.aggregate([
+    {
+        $group:{
+            _id:"$customer",
+             totalAmount: {
+            $sum: "$amount"
+          }
+        }
+    }
+])
+
+
+3.avg
+
+db.orders.aggregate([
+    {
+        $group:{
+            _id:"$customer",
+             averageAmount: {
+               $avg: "$amount"
+          }
+        }
+    }
+])
+
+4.$max, $min
+
+db.orders.aggregate([
+    {
+        $group:{
+            _id:"null",
+             highestAmount: {
+               $max: "$amount"
+          }
+        }
+    }
+])
+
+5. count orders per customer using $sum:1
+
+db.orders.aggregate([
+    {
+        $group:{
+            _id:"$customer",
+             totalOrders: {
+               $sum: 1
+          }
+        }
+    }
+])
+------------------------------------------
+
+3.$sort, $limit, $skip
+
+$sort :   
+-1: descending order,
+ 1: ascending order
+
+1. sort orders by amount, Highest first
+
+db.orders.find({},{_id:0, customer:1, amount:1}).sort({amount:1})
+db.orders.find({},{_id:0, customer:1, amount:1}).sort({amount:-1})
+
+db.orders.aggregate([
+    {
+        $sort:{
+            amount:-1
+        }
+    },
+    {
+        $project: {
+            _id:0, customer:1, amount:1
+        }
+    }
+])
+
+db.orders.aggregate([
+    {
+        $sort:{
+            amount:1
+        }
+    },
+    {
+        $project: {
+            _id:0, customer:1, amount:1
+        }
+    }
+])
+
+2. find the top 3 Highest value orders
+
+db.orders.aggregate([
+    {
+        $sort:{
+            amount: -1
+        }
+    },
+    {$limit: 1},
+    {
+        $project: {
+            _id:0, customer:1, amount:1
+        }
+    }
+])
+
+db.orders.aggregate([
+    {
+        $sort:{
+            amount: -1,
+            orderId: 1
+        }
+    },
+    {$limit: 3}
+])
+
+
+db.orders.aggregate([
+    {
+        $sort:{
+           
+            orderId: 1
+        }
+    },
+    {$skip: 3}
+])
+
+---------------------------
+
+101- 103, 104-106, 107-109
+
+db.orders.aggregate([
+    {
+        $sort:{
+            orderId: 1
+        }
+    },
+    {$limit:3}
+])
+
+db.orders.aggregate([
+    {
+        $sort:{
+            orderId: 1
+        }
+    },
+    {$skip:3},
+    {$limit:3}
+])
+
+------------------------------------------
+practice:
+2. Find orders from City

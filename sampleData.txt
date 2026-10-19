@@ -165,3 +165,34 @@ db.orders.find()
 db.payments.find()
 
 -------------------------------------------
+
+[
+  {
+    orderId: 101,
+    customer: "Ravi",
+    city: "Hyderabad",
+    amount: 2000,
+    status: "Delivered"
+  },
+  {
+    orderId: 102,
+    customer: "Ravi",
+    city: "Hyderabad",
+    amount: 3000,
+    status: "Pending"
+  },
+  {
+    orderId: 103,
+    customer: "Priya",
+    city: "Bangalore",
+    amount: 1500,
+    status: "Delivered"
+  },
+  {
+    orderId: 104,
+    customer: "Ravi",
+    city: "Hyderabad",
+    amount: 1000,
+    status: "Delivered"
+  }
+]

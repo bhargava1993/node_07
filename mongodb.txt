@@ -339,6 +339,35 @@ Aggregation:
 3. exact fectching  ($project)
 
 
+Aggregation:
+------------
+1. $match, $project
+
+Filtering and selecting fields
+
+2.$group, $sum, $avg
+
+Grouping and calculations
+
+3.$sort, $limit, $skip
+
+Sorting and pagination
+
+4.$lookup, $unwind
+
+Working with multiple collections
+
+5.$push, $addToSet, $count
+
+Arrays and counting
+
+6.$set, $addFields, $facet
+
+Derived fields and reports
+
+
+
+
 db.orders.find({_id:ObjectId("23432nbhj3j5)})
 
 $match
