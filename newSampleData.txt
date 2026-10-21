@@ -22,6 +22,9 @@ Working with multiple collections
 
 Arrays and counting
 
+$push: allows duplicates.
+$addToSet : avoids duplicates.
+
 6.$set, $addFields, $facet
 
 Derived fields and reports
@@ -206,6 +209,8 @@ db.orders.aggregate([
 db.orders.aggregate([
     {$match:{"status":"Pending"}}
 ])
+
+
 
 ----------------------------------------------
 0,1
@@ -408,3 +413,257 @@ db.orders.aggregate([
 ------------------------------------------
 practice:
 2. Find orders from City
+
+
+----------------------------------------
+
+
+
+------------------------------------------
+
+4.$lookup, $unwind
+
+1. get customer details for each order
+
+syntax:
+-------
+{
+   $lookup:
+     {
+       from: <collection to join>,
+       localField: <field from the input documents>,
+       foreignField: <field from the documents of the "from" collection>,
+       as: <output array field>
+     }
+}
+
+
+db.orders.aggregate([
+    {
+        $lookup: {
+            from: "customers",
+            localField: "customerId",
+            foreignField: "customerId",
+            as: "customersDetails"
+        }
+    },
+
+    {
+        $unwind: "$customersDetails"
+    }
+])
+
+
+2. Display each order with its cutomer name and membership
+
+db.orders.aggregate([
+    {
+        $lookup: {
+            from: "customers",
+            localField: "customerId",
+            foreignField: "customerId",
+            as: "customersDetails"
+        }
+    },
+
+    {
+        $unwind: "$customersDetails"
+    },
+
+    {
+        $project:{
+            _id:0,
+            orderId:1,
+            product:1,
+            amount:1,
+            customeName:"$customersDetails.name",
+            membership:"$customersDetails.membership"
+        }
+    }
+])
+
+4. Find all orders belonging to gold members
+
+db.orders.aggregate([
+  
+    {
+        $lookup: {
+            from: "customers",
+            localField: "customerId",
+            foreignField: "customerId",
+            as: "customersDetails"
+        }
+    },
+
+    {
+        $unwind: "$customersDetails"
+    },
+
+      {
+        $match:{
+            "customersDetails.membership":"Gold"
+        }
+    },
+
+    {
+        $project:{
+            _id:0,
+            orderId:1,
+            product:1,
+            amount:1,
+            customeName:"$customersDetails.name",
+            membership:"$customersDetails.membership"
+        }
+    }
+])
+--------------------------------------------------
+
+5.$push, $addToSet, $count
+
+1. List all products purchased by each cutomer
+
+let products=[];
+products.push("laptop")
+
+db.orders.aggregate([
+    {
+        $group: {
+            _id: "$customer",
+            products:{
+                $push:"$product"
+            }
+        }
+    }
+])
+
+2. find unique products ordered by each customer
+
+db.orders.aggregate([
+    {
+        $group: {
+            _id: "$customer",
+            uniqueProducts:{
+                $addToSet:"$product"
+            }
+        }
+    }
+])
+
+3. conut all delivered orders
+
+db.orders.aggregate([
+    {
+        $match:{
+            status: "Delivered"
+        }
+    },
+    {
+        $count: "deliveredOrders"
+    }
+])
+
+-----------------------------------------
+
+6.$set, $addFields, $facet
+
+1. calculate the total price of each order
+
+
+let obj = {
+  "_id": {
+    "$oid": "6ad577ab7dcad78e9246b79e"
+  },
+  "orderId": 106,
+  "customer": "Arun",
+  "city": "Chennai",
+  "product": "Mouse",
+  "category": "Accessories",
+  "amount": 1000,
+  "quantity": 3,
+  "status": "Delivered",
+  "customerId": 3
+}
+  {
+    _id: ObjectId('6ad577ab7dcad78e9246b79e'),
+    orderId: 106,
+    customer: 'Arun',
+    city: 'Chennai',
+    product: 'Mouse',
+    category: 'Accessories',
+    amount: 1000,
+    quantity: 3,
+    status: 'Delivered',
+    customerId: 3,
+    totalPrice: 3000
+  },
+
+obj.totalPrice = amount * quantity;
+obj["totalPrice"]= amount * quantity;
+
+db.orders.aggregate([
+    {
+        $addFields: {
+            totalPrice: {
+                $multiply : ["$amount", "$quantity"]
+            }
+        }
+    }
+])
+
+
+2. add a discount amount
+
+db.orders.aggregate([
+    {
+        $set: {
+            discount: {
+                $multiply : ["$amount", 0.10]
+            }
+        }
+    }
+])
+
+
+3. get delivered and Pending order counts in one query
+
+output: 
+
+{
+    deliveredOrders:[{count:5}],
+    PendingOrders: [{count:2}]
+}
+
+db.orders.aggregate([
+    {
+        $facet : {
+            deliveredOrders:[
+                {
+                    $match: {
+                        status: "Delivered"
+                    }, 
+                },
+                 {
+                        $count: "count"
+                }
+            ],
+            PendingOrders:[
+                 {
+                    $match: {
+                        status: "Pending"
+                    },
+                     
+                },
+                {
+                        $count: "count"
+                    }
+            ]
+        }
+    }
+])
+
+
+-----------------------------------------
+
+1. find total sales per customer
+2. find total delivered revenue by city
+3. find customers whose total order amount exceeds $20000
