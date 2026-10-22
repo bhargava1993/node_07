@@ -1,0 +1,380 @@
+db.students.drop();
+
+db.students.insertMany([
+  {
+    studentId: 101,
+    name: "Ravi",
+    age: 21,
+    department: "CSE",
+    year: 3,
+    fees: 45000,
+    marks: 78,
+    address: { city: "Bengaluru", state: "Karnataka" },
+    skills: ["JavaScript", "React", "Node.js"],
+    courses: [
+      { courseId: "C101", name: "React", score: 85, status: "active" },
+      { courseId: "C102", name: "Node.js", score: 72, status: "active" }
+    ],
+    active: true
+  },
+  {
+    studentId: 102,
+    name: "Priya",
+    age: 22,
+    department: "ECE",
+    year: 4,
+    fees: 50000,
+    marks: 88,
+    address: { city: "Hyderabad", state: "Telangana" },
+    skills: ["Python", "SQL"],
+    courses: [
+      { courseId: "C101", name: "React", score: 91, status: "active" },
+      { courseId: "C103", name: "Python", score: 89, status: "active" }
+    ],
+    active: true
+  },
+  {
+    studentId: 103,
+    name: "Kiran",
+    age: 20,
+    department: "CSE",
+    year: 2,
+    fees: 35000,
+    marks: 65,
+    address: { city: "Chennai", state: "Tamil Nadu" },
+    skills: ["Java", "SQL"],
+    courses: [
+      { courseId: "C102", name: "Node.js", score: 68, status: "active" }
+    ],
+    active: true
+  },
+  {
+    studentId: 104,
+    name: "Anusha",
+    age: 21,
+    department: "IT",
+    year: 3,
+    fees: 42000,
+    marks: 92,
+    address: { city: "Bengaluru", state: "Karnataka" },
+    skills: ["JavaScript", "MongoDB"],
+    courses: [
+      { courseId: "C104", name: "MongoDB", score: 95, status: "active" },
+      { courseId: "C101", name: "React", score: 90, status: "active" }
+    ],
+    active: true
+  },
+  {
+    studentId: 105,
+    name: "Suresh",
+    age: 23,
+    department: "MECH",
+    year: 4,
+    fees: 55000,
+    marks: 55,
+    address: { city: "Pune", state: "Maharashtra" },
+    skills: ["AutoCAD", "Python"],
+    courses: [
+      { courseId: "C105", name: "AutoCAD", score: 60, status: "active" }
+    ],
+    active: false
+  },
+  {
+    studentId: 106,
+    name: "Divya",
+    age: 20,
+    department: "CSE",
+    year: 2,
+    fees: 38000,
+    marks: 81,
+    address: { city: "Hyderabad", state: "Telangana" },
+    skills: ["React", "CSS", "JavaScript"],
+    courses: [
+      { courseId: "C101", name: "React", score: 83, status: "active" },
+      { courseId: "C102", name: "Node.js", score: 79, status: "active" }
+    ],
+    active: true
+  },
+  {
+    studentId: 107,
+    name: "Arjun",
+    age: 22,
+    department: "IT",
+    year: 4,
+    fees: 47000,
+    marks: 73,
+    address: { city: "Chennai", state: "Tamil Nadu" },
+    skills: ["Java", "Spring"],
+    courses: [
+      { courseId: "C106", name: "Spring Boot", score: 76, status: "active" }
+    ],
+    active: true
+  },
+  {
+    studentId: 108,
+    name: "Meena",
+    age: 21,
+    department: "CSE",
+    year: 3,
+    fees: 46000,
+    marks: 95,
+    address: { city: "Bengaluru", state: "Karnataka" },
+    skills: ["Python", "Pandas"],
+    courses: [
+      { courseId: "C103", name: "Python", score: 96, status: "active" },
+      { courseId: "C104", name: "MongoDB", score: 94, status: "active" }
+    ],
+    active: true
+  },
+  {
+    studentId: 109,
+    name: "Vikram",
+    age: 24,
+    department: "ECE",
+    year: 4,
+    fees: 60000,
+    marks: 48,
+    address: { city: "Mumbai", state: "Maharashtra" },
+    skills: ["C", "Embedded Systems"],
+    courses: [
+      { courseId: "C107", name: "Embedded Systems", score: 50, status: "active" }
+    ],
+    active: false
+  },
+  {
+    studentId: 110,
+    name: "Pooja",
+    age: 20,
+    department: "IT",
+    year: 2,
+    fees: 40000,
+    marks: 84,
+    address: { city: "Hyderabad", state: "Telangana" },
+    skills: ["JavaScript", "React"],
+    courses: [
+      { courseId: "C101", name: "React", score: 87, status: "active" }
+    ],
+    active: true
+  }
+]);
+
+---------------------------------------------
+
+updateOperation:
+$set
+$inc - increment
+$unset - remove a field
+$min
+$max
+$mul
+$rename
+$currentDate
+
+
+updateOne() — when you want an update result such as matched and modified counts.
+updateMany()- when you want an update multiple documents result such as matched and modified counts.
+findOneAndUpdate() — when you want the document returned as part of the update operation.
+
+
+upsert: true
+If the document exists, update it. If it doesn't exist, insert a new document.
+
+-----------------------------------------------------------------------------------------
+
+
+1. updateOne() - update only one document
+
+syntax:
+db.students.updateOne(
+  {filterCondition},
+  {updateOperation: { filed:value }}
+)
+
+Q1. A student 102 changes their department from ECE to CSE 
+
+db.students.findOne({ studentId: 102})
+
+db.students.updateOne(
+  { studentId: 102},
+  {$set: { department:"CSE" }}
+)
+
+Update multiple files in the document
+---------------------------------------
+db.students.updateOne(
+  { studentId: 103},
+  {$set: { department:"IT", year:3, active:false,marks:70 }}
+)
+
+update a nested object filed:
+-------------------------------
+
+db.students.updateOne(
+  { studentId: 103},
+  {$set: { "address.city": "Hyderabad" }}
+)
+
+------------------------------------------------------------------
+
+UpdateMany() - update multiple documents
+-----------------------------------------
+
+
+Q1. update every cse student fees
+
+db.students.updateMany(
+ 
+  {department:"CSE"},
+  {$set: {fees: 48000}}
+)
+
+
+const array = [
+  { studentId: 101, marks: 78 },
+  { studentId: 102, marks: 88 },
+  { studentId: 104, marks: 92 },
+  { studentId: 106, marks: 81 },
+  { studentId: 107, marks: 73 },
+  { studentId: 108, marks: 95 },
+  { studentId: 110, marks: 84 }
+]
+
+array = array.map(el=> el.marks +5)
+
+increment marks for every active student:
+--------------------------------------------
+
+db.students.updateMany(
+ 
+  {active: true},
+  {$inc: {marks: 5}}
+)
+
+db.students.updateMany(
+ 
+  {active: true},
+  {$inc: {fees: 1000}}
+)
+
+db.students.updateMany(
+ 
+  {year: 4},
+  {$set: {year:5}}
+)
+
+db.students.updateMany(
+  {"address.city": "Hyderabad"},
+  {$set: { "address.state":"Telangana"}}
+)
+
+
+findOneAndUpdate():   update and return a document
+--------------------------------------------------
+
+db.students.findOneAndUpdate(
+  {filterCondition},
+  {updateOperation: { filed:value }},
+  {returnDocument: "after"}
+)
+
+ex:
+
+db.students.findOneAndUpdate(
+  {studentId:101},
+  {$set: { department : "IT" }},
+  {returnDocument: "after"}
+)
+
+db.students.findOneAndUpdate(
+  {studentId:101},
+  {$set: { department : "CSE" }},
+ {returnDocument: "before"}
+)
+
+db.students.findOneAndUpdate(
+  {studentId:103},
+  {$inc: { marks : 10 }},
+  {returnDocument: "after"}
+)
+
+
+------------------------------------------------------
+
+upsert : true --> update or insert
+
+if document is exists, update it, 
+if document doesn't exists, insert new documents
+
+db.students.updateOne(
+  {studentId:101},
+  {$set: {department: "IT" }},
+  {upsert: true}
+)
+
+db.students.updateOne(
+  {studentId:111},
+  {$set: {
+    name:"Venu",
+    department: "IT",
+    age:21,
+    year:3,
+    fees:45000,
+    marks:80,
+    active:true
+   }},
+  {upsert: true}
+)
+
+-----------------------------
+
+$unset - remove a filed
+
+db.students.updateOne(
+  {studentId:101},
+  {$unset: {department: "" }},
+  {upsert: true}
+)
+
+db.students.findOneAndUpdate(
+  {studentId:101},
+  {$unset: {year: "" }},
+  {returnDocument: "after"}
+)
+
+--------------------------------------
+
+$min
+$max
+$mul
+$rename
+$currentDate
+
+db.students.findOneAndUpdate(
+  {studentId:101},
+  {$min: {marks: 70 }},
+  {returnDocument: "after"}
+)
+
+db.students.findOneAndUpdate(
+  {studentId:101},
+  {$max: {marks: 80 }},
+  {returnDocument: "after"}
+)
+
+db.students.findOneAndUpdate(
+  {studentId:101},
+  {$mul: {fees: 1.1 }},
+  {returnDocument: "after"}
+)
+
+db.students.findOneAndUpdate(
+  {studentId:101},
+  {$rename: {marks: "totalMarks"}},
+  {returnDocument: "after"}
+)
+
+db.students.findOneAndUpdate(
+  {studentId:101},
+  {$currentDate: {lastUpdated: true}},
+  {returnDocument: "after"}
+)
