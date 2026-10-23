@@ -170,6 +170,21 @@ $mul
 $rename
 $currentDate
 
+Array updates - 
+1.$push
+2.$each
+3.$addToSet
+4.$pull
+5.$pullAll
+6.$pop -  1, -1
+7.$elemMatch
+
+positional based:
+-------------------
+
+$ - first matching element in the array - "course.$.score"
+$[] - every element in the array  -  "course.$[].score"
+$[identifier] - every element matching the arrayFilters condition - "course.$[ele].score"
 
 updateOne() — when you want an update result such as matched and modified counts.
 updateMany()- when you want an update multiple documents result such as matched and modified counts.
@@ -378,3 +393,205 @@ db.students.findOneAndUpdate(
   {$currentDate: {lastUpdated: true}},
   {returnDocument: "after"}
 )
+-------------------------------------------
+
+Array manipulation: add, remove and manitain unique values
+------------------------------------------------------------
+
+1. $push - add an element to an array
+
+skills: [ 'JavaScript', 'React', 'Node.js' ]
+
+array.push("TypeScript")
+
+
+db.students.updateOne(
+  {studentId : 101},
+  {$push : {skills : "TypeScript"}}
+)
+
+db.students.updateOne(
+  {studentId : 101},
+  {$push : {skills : "React"}}
+)
+
+2. $each - to add multiple values into array
+
+array.push("TypeScript", "HTML", "CSS")
+
+db.students.updateOne(
+  {studentId : 101},
+  { $push : { 
+    skills : {
+    $each: ["HTML","CSS","MongoDB"]
+  } }}
+)
+
+3. $addToSet - add an element only if it is not present values gets added
+
+db.students.updateOne(
+  {studentId : 101},
+  {$addToSet : {skills : "typeScript"}}
+)
+
+db.students.updateOne(
+  {studentId : 101},
+  { $addToSet : { 
+    skills : {
+    $each: ["html","css","MongoDB"]
+  } }}
+)
+---------------------------------------------
+4. $pull - remove matching element
+
+db.students.updateOne(
+  {studentId : 101},
+  {$pull : {skills : "React"}}
+)
+
+
+ courses: [
+    { courseId: 'C101', name: 'React', score: 85, status: 'active' },
+    { courseId: 'C102', name: 'Node.js', score: 72, status: 'active' }
+  ],
+
+db.students.updateOne(
+  {studentId : 101},
+  {$pull : {courses : {courseId: "C102"}}}
+)
+
+db.students.updateOne(
+  {studentId : 101},
+  {$addToSet : {courses : { courseId: 'C102', name: 'Node.js', score: 72, status: 'active' }}}
+)
+
+db.students.updateOne(
+  {studentId : 101},
+  {$pull : {courses : {score: {$lt:80}
+  }}}
+)
+
+5. $pop - remove the first or last element
+
+1 - removes the last element
+-1 removes te firest element
+
+db.students.updateOne(
+  {studentId : 101},
+  {$pop: {skills: 1}}
+)
+
+6. $pullAll - remove multiple specific values
+
+db.students.updateOne(
+  {studentId : 101},
+  {$pullAll: {skills: ["HTML","CSS"]}}
+)
+
+------------------------------------
+
+updating a particular object inside an array:
+---------------------------------------------------
+ courses: [
+    { courseId: 'C101', name: 'React', score: 85, status: 'active' },
+    { courseId: 'C102', name: 'Node.js', score: 72, status: 'active' },
+    { courseId: 'C103', name: 'MongoDB', score: 62, status: 'active' },
+    { courseId: 'C104', name: 'Express', score: 92, status: 'active' }
+  ]
+1. positional $ - update the first matching array element
+
+db.students.updateOne(
+  {studentId : 101, "courses.courseId":"C101"},
+  { $set: {
+    "courses.$.score":95
+  } }
+  )
+
+2. $[] - update every element in the array
+
+db.students.updateOne(
+  {studentId: 101},
+  {$set: {
+    "courses.$[].status":"completed"
+  }}
+)
+
+3. $[identifier] with arrayFilters - update selected elements
+
+array.filter(ele=> ele < 80)
+
+update the scroe of only courses where the score is below 80
+
+increasing:
+-----------
+db.students.updateOne(
+  {studentId: 101},
+  {$inc :{
+    "courses.$[course].score":10
+  }},
+  {
+    arrayFilters: [
+      {"course.score":{$lt:90}}
+    ]
+  }
+)
+
+decreasing:
+------------
+db.students.updateOne(
+  {studentId: 101},
+  {$inc :{
+    "courses.$[ele].score":-10
+  }},
+  {
+    arrayFilters: [
+      {"ele.score":{$lt:90}}
+    ]
+  }
+)
+
+----------------------------------------------
+
+1. $elemMatch - 
+
+Find students with a course score grater than 90
+
+db.students.find({
+  courses: {
+    $elemMatch : {
+      name:"React",
+      score: {$gt:80}
+    }
+  }
+},{_id:0,courses:1,studentId:1})
+
+
+update a course using $elemMatch in the filter
+
+db.students.updateOne(
+  {
+    studentId: 101,
+    courses: {
+    $elemMatch : {
+      courseId: "C101",
+      score: {$lt:98}
+    }
+  }
+  },
+
+  {
+    $set: {
+      "courses.$.score": 90
+    }
+  }
+)
+
+db.students.updateOne(
+  {studentId: 101,
+  "courses.courseId": "C102"},
+
+  {$set: {
+    "courses.$.status": "Active"
+  }}
+)
+
