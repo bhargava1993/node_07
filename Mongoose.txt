@@ -1,0 +1,57 @@
+{
+  _id: ObjectId('6ad97881055b1b568846b799'),
+  studentId: 101,
+  name: 'Ravi',
+  age: 21,
+  fees: 53900.00000000001,
+  address: { city: 'Bengaluru', state: 'Karnataka' },
+  skills: [ 'Node.js', 'TypeScript', 'MongoDB', 'MongoDB', 'typeScript' ],
+  courses: [
+    { courseId: 'C101', name: 'React', score: 90, status: 'completed' },
+    { courseId: 'C102', name: 'Node.js', score: 72, status: 'Active' },
+    {
+      courseId: 'C103',
+      name: 'MongoDB',
+      score: 62,
+      status: 'completed'
+    },
+    {
+      courseId: 'C104',
+      name: 'Express',
+      score: 92,
+      status: 'completed'
+    }
+  ],
+  active: true,
+  totalMarks: 80,
+  lastUpdated: ISODate('2026-10-22T03:47:48.059Z')
+}
+
+{
+    studentId: "115"
+    name: 100
+    age:"Ravi"
+}
+
+{} - javscript - object
+{} - mongodb - document
+{} - api - json
+
+db.students.insertOne({
+    studentId: 115,
+    name: 100,
+    age:"Ravi"
+})
+
+
+1. validation
+2. type casting
+3. query helpers
+
+Mongoose is an ODM(Object Data modeling) library for mongoDB and node.js.
+
+ORM (Object Relation Mappling)
+-------------------------------------------
+
+npm i mongoose
+
